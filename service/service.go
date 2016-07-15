@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"net"
 	"time"
 )
@@ -9,30 +8,38 @@ import (
 type Node struct {
 	Address    string
 	Status     bool
-	Interval   time.Duration
+	FailureNum uint32
 	Attributes map[string]string
 }
 
 type Service struct {
-	Name       string
-	Nodes      map[string]Node
-	nodeStatus chan Node
+	Name          string
+	Nodes         map[string]Node
+	MaxFailureNum uint32
+	Interval      time.Duration
+	nodeStatus    chan Node
 }
 
-func NewService(name string, nodes []Node) *Service {
+func NewService(name string, nodes []Node, maxFailureNum uint32, interval time.Duration) *Service {
+	if len(nodes) < 1 {
+		return nil
+	}
+
 	allNodes := make(map[string]Node)
 	for _, node := range nodes {
 		allNodes[node.Address] = node
 	}
 
 	return &Service{
-		Name:       name,
-		Nodes:      allNodes,
-		nodeStatus: make(chan Node, len(nodes)),
+		Name:          name,
+		Nodes:         allNodes,
+		MaxFailureNum: maxFailureNum,
+		Interval:      interval,
+		nodeStatus:    make(chan Node, len(nodes)),
 	}
 }
 
-func (s *Service) StartMonitor() {
+func (s *Service) Start() {
 	//monitor all the node
 	for _, node := range s.Nodes {
 		go s.checkNodeStatus(node)
@@ -47,24 +54,28 @@ func (s *Service) updateNodeStatus() {
 		status := <-s.nodeStatus
 
 		node := s.Nodes[status.Address]
-		node.Status = status.Status
+		if status.Status {
+			node.Status = status.Status
+			node.FailureNum = 0
+		} else {
+			node.FailureNum++
+			if node.FailureNum >= s.MaxFailureNum {
+				node.Status = status.Status
+			}
+		}
 		s.Nodes[status.Address] = node
 	}
 }
 
 func (s *Service) checkNodeStatus(node Node) {
-	log.Printf("Start to monitor Node:%s\n", node.Address)
-
 	for {
 		var status bool
 		err := tryConnect(node.Address)
 
 		if err != nil {
 			status = false
-			log.Printf("Node:%s can't be connect, %s", node.Address, err)
 		} else {
 			status = true
-			log.Printf("Node:%s is fine", node.Address)
 		}
 
 		s.nodeStatus <- Node{
@@ -72,7 +83,7 @@ func (s *Service) checkNodeStatus(node Node) {
 			Status:  status,
 		}
 
-		time.Sleep(node.Interval)
+		time.Sleep(s.Interval)
 	}
 }
 
