@@ -1,7 +1,7 @@
-package service
+package monitor
 
 import (
-	"net"
+    "net"
 	"time"
 )
 
@@ -9,7 +9,7 @@ type Node struct {
 	Address    string
 	Status     bool
 	FailureNum uint32
-	Attributes map[string]string
+	Attr map[string]string
 }
 
 type Service struct {

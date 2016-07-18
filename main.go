@@ -1,9 +1,11 @@
 package main
 
 import (
-    "github.com/wangbai/peeper/httpserv"
+	"github.com/wangbai/peeper/httpserv"
 )
 
 func main() {
-    httpserv.Start(11111, &httpserv.DiscoveryResource{nil})
+	//dis := &monitor.Discovery {}
+	//d := httpserv.NewDiscoveryResource(dis)
+	httpserv.Start(11111)
 }
