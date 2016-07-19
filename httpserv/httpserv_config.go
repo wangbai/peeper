@@ -31,5 +31,6 @@ func (hc *HttpservConfig) ParseAndBuild(dir string) {
 		log.Fatal("When parse ", filePath, " : ", err)
 	}
 
-    NewServer(hc.Port);
+	s := NewServer()
+	s.Port = hc.Port
 }

@@ -12,12 +12,12 @@ type server struct {
 
 var s *server
 
-func NewServer(port uint32) *server {
-    if s == nil {
-        s = &server{Port: port}
-    }
+func NewServer() *server {
+	if s == nil {
+		s = &server{}
+	}
 
-    return s;
+	return s
 }
 
 func (s *server) Start() {

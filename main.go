@@ -9,6 +9,6 @@ import (
 func main() {
 	config.Build("config/")
 
-	server := httpserv.NewServer(0)
+	server := httpserv.NewServer()
 	server.Start()
 }
