@@ -6,6 +6,28 @@ import (
 	"strings"
 )
 
+type server struct {
+	Port uint32
+}
+
+var s *server
+
+func NewServer(port uint32) *server {
+    if s == nil {
+        s = &server{Port: port}
+    }
+
+    return s;
+}
+
+func (s *server) Start() {
+	addr := fmt.Sprintf(":%d", s.Port)
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", serve)
+	http.ListenAndServe(addr, mux)
+}
+
 func serve(resp http.ResponseWriter, req *http.Request) {
 	//parse command
 	commStr := strings.Split(req.RequestURI, "?")[0]
@@ -13,12 +35,4 @@ func serve(resp http.ResponseWriter, req *http.Request) {
 
 	comm := matchCommand(commStr)
 	comm.Handle(resp, req)
-}
-
-func Start(port uint32) {
-	addr := fmt.Sprintf(":%d", port)
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", serve)
-	http.ListenAndServe(addr, mux)
 }

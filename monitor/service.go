@@ -1,7 +1,7 @@
 package monitor
 
 import (
-    "net"
+	"net"
 	"time"
 )
 
@@ -9,7 +9,7 @@ type Node struct {
 	Address    string
 	Status     bool
 	FailureNum uint32
-	Attr map[string]string
+	Attr       map[string]string
 }
 
 type Service struct {
@@ -17,10 +17,11 @@ type Service struct {
 	Nodes         map[string]Node
 	MaxFailureNum uint32
 	Interval      time.Duration
+	Timeout       time.Duration
 	nodeStatus    chan Node
 }
 
-func NewService(name string, nodes []Node, maxFailureNum uint32, interval time.Duration) *Service {
+func NewService(name string, nodes []Node, maxFailureNum uint32, interval time.Duration, timeout time.Duration) *Service {
 	if len(nodes) < 1 {
 		return nil
 	}
@@ -35,6 +36,7 @@ func NewService(name string, nodes []Node, maxFailureNum uint32, interval time.D
 		Nodes:         allNodes,
 		MaxFailureNum: maxFailureNum,
 		Interval:      interval,
+		Timeout:       timeout,
 		nodeStatus:    make(chan Node, len(nodes)),
 	}
 }
@@ -70,7 +72,7 @@ func (s *Service) updateNodeStatus() {
 func (s *Service) checkNodeStatus(node Node) {
 	for {
 		var status bool
-		err := tryConnect(node.Address)
+		err := tryConnect(node.Address, s.Timeout)
 
 		if err != nil {
 			status = false
@@ -87,8 +89,7 @@ func (s *Service) checkNodeStatus(node Node) {
 	}
 }
 
-func tryConnect(address string) error {
-	timeout := 10 * time.Second
+func tryConnect(address string, timeout time.Duration) error {
 	conn, err := net.DialTimeout("tcp", address, timeout)
 	if err != nil {
 		return err

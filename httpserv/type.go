@@ -13,11 +13,11 @@ var commands map[string]Command = make(map[string]Command)
 
 func Register(name string, comm Command) {
 	if comm == nil {
-		log.Fatal("Command:%s has nil handler", name)
+		log.Fatal("Command: ", name, " has nil handler")
 	}
 
 	if _, dup := commands[name]; dup {
-		log.Fatal("Command:%s has been registered", name)
+		log.Fatal("Command: ", name, " has been registered")
 	}
 
 	commands[name] = comm

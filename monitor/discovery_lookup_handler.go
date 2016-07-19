@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-    "net/http"
+	"net/http"
 
 	"github.com/wangbai/peeper/httpserv"
 )
@@ -31,29 +31,29 @@ func RegisterDiscoveryLookupHandler(d *Discovery) {
 		log.Fatal("Discovery Service should not be empty")
 	}
 
-    dh := &discoveryLookupHandler{dis: d}
-    httpserv.Register("discovery", dh)
+	dh := &discoveryLookupHandler{dis: d}
+	httpserv.Register("discovery", dh)
 }
 
 func (dh *discoveryLookupHandler) Handle(resp http.ResponseWriter, req *http.Request) {
-    // set header
-    resp.Header().Set("Content-Type", "application/json")
+	// set header
+	resp.Header().Set("Content-Type", "application/json")
 
-    // compose json data
+	// compose json data
 	jsonDis := make(map[string]service)
-    ss := dh.dis.GetAllServices();
-    for _, s := range ss {
-        var jsonServ []node
-        for _, n := range s.Nodes {
-            jsonServ = append(jsonServ, node {
-                Address: n.Address,
-                Status: n.Status,
-                Attr: n.Attr,
-            })
-        }
+	ss := dh.dis.GetAllServices()
+	for _, s := range ss {
+		var jsonServ []node
+		for _, n := range s.Nodes {
+			jsonServ = append(jsonServ, node{
+				Address: n.Address,
+				Status:  n.Status,
+				Attr:    n.Attr,
+			})
+		}
 
-        jsonDis[s.Name] = jsonServ
-    } 
+		jsonDis[s.Name] = jsonServ
+	}
 
 	j, err := json.Marshal(jsonDis)
 	if err != nil {

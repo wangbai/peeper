@@ -1,36 +1,14 @@
 package main
 
 import (
-	"time"
-
-	"github.com/wangbai/peeper/httpserv"
-	"github.com/wangbai/peeper/monitor"
+	"github.com/wangbai/peeper/config"
+    "github.com/wangbai/peeper/httpserv"
+	_ "github.com/wangbai/peeper/monitor"
 )
 
 func main() {
-	serv1 := monitor.NewService("http",
-		[]monitor.Node{
-			monitor.Node{Address: "baidu.com:80"},
-			monitor.Node{Address: "sohu.com:80"},
-		},
-		3,
-		2*time.Second,
-	)
+    config.Build("config/");
 
-	serv2 := monitor.NewService("https",
-		[]monitor.Node{
-			monitor.Node{Address: "baidu.com:443"},
-			monitor.Node{Address: "sohu.com:443"},
-		},
-		3,
-		2*time.Second,
-	)
-
-	dis := monitor.NewDiscovery()
-	dis.AddService(serv1)
-	dis.AddService(serv2)
-	dis.Start()
-
-	monitor.RegisterDiscoveryLookupHandler(dis)
-	httpserv.Start(11111)
+    server := httpserv.NewServer(0)
+    server.Start()
 }
