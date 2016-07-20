@@ -12,13 +12,13 @@ import (
 var configDir string
 
 func parseCmdLine() {
-    flag.StringVar(&configDir, "d", "", "directory for config files")
-    flag.Parse()
+	flag.StringVar(&configDir, "d", "", "directory for config files")
+	flag.Parse()
 
-    if configDir == "" {
-        flag.Usage()
-        os.Exit(1)
-    }
+	if configDir == "" {
+		flag.Usage()
+		os.Exit(1)
+	}
 }
 
 func main() {
