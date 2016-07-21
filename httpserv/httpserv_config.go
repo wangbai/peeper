@@ -9,16 +9,16 @@ import (
 )
 
 func init() {
-	config.Register("httpserv", &HttpservConfig{})
+	config.Register("httpserv", &httpservConfig{})
 }
 
-type HttpservConfig struct {
+type httpservConfig struct {
 	Port uint32 `json:"port"`
 }
 
 const configFile = "httpserv.conf"
 
-func (hc *HttpservConfig) ParseAndBuild(dir string) {
+func (hc *httpservConfig) ParseAndBuild(dir string) {
 	filePath := dir + "/" + configFile
 
 	file, err := ioutil.ReadFile(filePath)
