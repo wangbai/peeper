@@ -3,11 +3,16 @@ package main
 import (
 	"flag"
 	"os"
+	"runtime"
 
 	"github.com/wangbai/peeper/config"
 	"github.com/wangbai/peeper/httpserv"
 	_ "github.com/wangbai/peeper/monitor"
 )
+
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+}
 
 var configDir string
 
