@@ -10,17 +10,14 @@ import (
 )
 
 // json decode helper for Node
-type node struct {
+type nodeOutput struct {
 	Address string            `json:"address"`
 	Status  bool              `json:"status"`
 	Attr    map[string]string `json:"attr,omitempty"`
 }
 
 // json helper type for Service
-type service []node
-
-// json helper type for Discovery
-type discovery map[string]service
+type serviceOutput []nodeOutput
 
 type discoveryLookupHandler struct {
 	dis *Discovery
@@ -36,16 +33,13 @@ func RegisterDiscoveryLookupHandler(d *Discovery) {
 }
 
 func (dh *discoveryLookupHandler) Handle(resp http.ResponseWriter, req *http.Request) {
-	// set header
-	resp.Header().Set("Content-Type", "application/json")
-
 	// compose json data
-	jsonDis := make(map[string]service)
+	jsonDis := make(map[string]serviceOutput)
 	ss := dh.dis.GetAllServices()
 	for _, s := range ss {
-		var jsonServ []node
+		var jsonServ []nodeOutput
 		for _, n := range s.Nodes {
-			jsonServ = append(jsonServ, node{
+			jsonServ = append(jsonServ, nodeOutput {
 				Address: n.Address,
 				Status:  n.Status,
 				Attr:    n.Attr,
@@ -57,8 +51,12 @@ func (dh *discoveryLookupHandler) Handle(resp http.ResponseWriter, req *http.Req
 
 	j, err := json.Marshal(jsonDis)
 	if err != nil {
+        resp.WriteHeader(http.StatusNotFound)
 		fmt.Fprintf(resp, "%s", err)
 	}
 
+	// set header
+	resp.Header().Set("Content-Type", "application/json")
+    resp.WriteHeader(http.StatusOK)
 	fmt.Fprintf(resp, "%s", j)
 }

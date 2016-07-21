@@ -13,20 +13,20 @@ func init() {
 	config.Register("discovery", &DiscoveryConfig{})
 }
 
-type nodeItem struct {
+type nodeConfig struct {
 	Address string            `json:"address"`
 	Attr    map[string]string `json:"attr"`
 }
 
-type serviceItem struct {
+type serviceConfig struct {
 	Name          string     `json:"name"`
 	MaxFailureNum uint32     `json:"max_failure_num"`
 	Interval      uint32     `json:"interval"`
 	Timeout       uint32     `json:"timeout"`
-	Nodes         []nodeItem `json:"nodes"`
+	Nodes         []nodeConfig `json:"nodes"`
 }
 
-type DiscoveryConfig []serviceItem
+type DiscoveryConfig []serviceConfig
 
 const configFile = "discovery.conf"
 
