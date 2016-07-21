@@ -62,7 +62,7 @@ func (dc *DiscoveryConfig) ParseAndBuild(dir string) {
 	}
 
 	dis.Start()
-	RegisterDiscoveryLookupHandler(dis)
+	registerDiscoveryLookupHandler(dis)
 
 	log.Printf("discovery app has been started")
 }

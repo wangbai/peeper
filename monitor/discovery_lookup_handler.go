@@ -23,7 +23,7 @@ type discoveryLookupHandler struct {
 	dis *Discovery
 }
 
-func RegisterDiscoveryLookupHandler(d *Discovery) {
+func registerDiscoveryLookupHandler(d *Discovery) {
 	if d == nil {
 		log.Fatal("Discovery Service should not be empty")
 	}
