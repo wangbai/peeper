@@ -6,3 +6,6 @@ After=network.target
 ExecStart=/usr/local/bin/peeper -d /data/greencheng/lib/peeper/conf
 KillMode=process
 Restart=always
+
+[Install]
+WantedBy=multi-user.target
