@@ -1,0 +1,8 @@
+[Unit]
+Description=Peeper Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/peeper -d /data/greencheng/lib/peeper/conf
+KillMode=process
+Restart=always
