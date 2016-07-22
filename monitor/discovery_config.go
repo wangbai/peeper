@@ -47,7 +47,7 @@ func (dc *DiscoveryConfig) ParseAndBuild(dir string) {
 	for _, serv := range *dc {
 		var nodes []Node
 		for _, n := range serv.Nodes {
-			nodes = append(nodes, Node{Address: n.Address, Attr: n.Attr})
+			nodes = append(nodes, Node{Address: n.Address, Status: true, Attr: n.Attr})
 		}
 
 		dis.AddService(
