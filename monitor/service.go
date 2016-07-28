@@ -14,11 +14,16 @@ type Node struct {
 
 type Service struct {
 	Name          string
-	Nodes         map[string]Node
+	Nodes         []Node
 	MaxFailureNum uint32
 	Interval      time.Duration
 	Timeout       time.Duration
-	nodeStatus    chan Node
+	nodeStatus    chan statusChan
+}
+
+type statusChan struct {
+    index       int
+    status      bool
 }
 
 func NewService(name string, nodes []Node, maxFailureNum uint32, interval time.Duration, timeout time.Duration) *Service {
@@ -26,25 +31,20 @@ func NewService(name string, nodes []Node, maxFailureNum uint32, interval time.D
 		return nil
 	}
 
-	allNodes := make(map[string]Node)
-	for _, node := range nodes {
-		allNodes[node.Address] = node
-	}
-
 	return &Service{
 		Name:          name,
-		Nodes:         allNodes,
+		Nodes:         nodes,
 		MaxFailureNum: maxFailureNum,
 		Interval:      interval,
 		Timeout:       timeout,
-		nodeStatus:    make(chan Node, len(nodes)),
+		nodeStatus:    make(chan statusChan, len(nodes)),
 	}
 }
 
 func (s *Service) Start() {
 	//monitor all the node
-	for _, node := range s.Nodes {
-		go s.checkNodeStatus(node)
+	for index, node := range s.Nodes {
+		go s.checkNodeStatus(index, node)
 	}
 
 	//update status
@@ -53,23 +53,25 @@ func (s *Service) Start() {
 
 func (s *Service) updateNodeStatus() {
 	for {
-		status := <-s.nodeStatus
+		st := <-s.nodeStatus
+        status := st.status
+        index := st.index        
 
-		node := s.Nodes[status.Address]
-		if status.Status {
-			node.Status = status.Status
+		node := s.Nodes[index]
+		if status {
+			node.Status = status
 			node.FailureNum = 0
 		} else {
 			node.FailureNum++
 			if node.FailureNum >= s.MaxFailureNum {
-				node.Status = status.Status
+				node.Status = status
 			}
 		}
-		s.Nodes[status.Address] = node
+		s.Nodes[index] = node
 	}
 }
 
-func (s *Service) checkNodeStatus(node Node) {
+func (s *Service) checkNodeStatus(index int, node Node) {
 	for {
 		var status bool
 		err := tryConnect(node.Address, s.Timeout)
@@ -80,9 +82,9 @@ func (s *Service) checkNodeStatus(node Node) {
 			status = true
 		}
 
-		s.nodeStatus <- Node{
-			Address: node.Address,
-			Status:  status,
+		s.nodeStatus <- statusChan {
+			index: index,
+			status:  status,
 		}
 
 		time.Sleep(s.Interval)
