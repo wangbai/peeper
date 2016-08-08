@@ -33,8 +33,8 @@ func main() {
 
 	config.Build(configDir)
 
-    if dryrun {
-	    server := httpserv.NewServer()
-	    server.Start()
-    }
+	if dryrun {
+		server := httpserv.NewServer()
+		server.Start()
+	}
 }
