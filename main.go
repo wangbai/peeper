@@ -15,9 +15,11 @@ func init() {
 }
 
 var configDir string
+var dryrun bool
 
 func parseCmdLine() {
 	flag.StringVar(&configDir, "d", "", "directory for config files")
+	flag.BoolVar(&dryrun, "dryrun", false, "dryrun for checking config")
 	flag.Parse()
 
 	if configDir == "" {
@@ -31,6 +33,8 @@ func main() {
 
 	config.Build(configDir)
 
-	server := httpserv.NewServer()
-	server.Start()
+    if dryrun {
+	    server := httpserv.NewServer()
+	    server.Start()
+    }
 }
