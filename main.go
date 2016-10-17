@@ -31,7 +31,7 @@ func parseCmdLine() {
 func main() {
 	parseCmdLine()
 
-	config.Build(configDir)
+	config.Load(configDir)
 
 	if !dryrun {
 		server := httpserv.NewServer()
