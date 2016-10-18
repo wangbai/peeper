@@ -5,8 +5,9 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/wangbai/peeper/server"
 	_ "github.com/wangbai/peeper/monitor"
+	"github.com/wangbai/peeper/server"
+	_ "github.com/wangbai/peeper/snowflake"
 )
 
 func init() {
@@ -35,6 +36,6 @@ func main() {
 	server.LoadModule(configDir)
 
 	if !dryrun {
-	    server.NewServer(port).Start()
+		server.NewServer(port).Start()
 	}
 }
