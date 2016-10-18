@@ -18,8 +18,8 @@ var dryrun bool
 
 func parseCmdLine() {
 	flag.StringVar(&configDir, "config_dir", "", "directory for config files")
-	flag.IntVar(&port, "port", 0, "local server port")
-	flag.BoolVar(&dryrun, "dryrun", false, "dryrun for checking config")
+	flag.IntVar(&port, "port", 16722, "local server port, default: 16722")
+	flag.BoolVar(&dryrun, "dryrun", false, "dryrun for checking config, default: false")
 	flag.Parse()
 
 	if configDir == "" || port == 0 {
