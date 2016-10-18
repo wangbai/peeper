@@ -5,9 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/wangbai/peeper/config"
-	"github.com/wangbai/peeper/httpserv"
-	_ "github.com/wangbai/peeper/monitor"
+	"github.com/wangbai/peeper/server"
 )
 
 func init() {
@@ -15,14 +13,16 @@ func init() {
 }
 
 var configDir string
+var port int
 var dryrun bool
 
 func parseCmdLine() {
-	flag.StringVar(&configDir, "d", "", "directory for config files")
+	flag.StringVar(&configDir, "config_dir", "", "directory for config files")
+	flag.IntVar(&port, "port", 0, "local server port")
 	flag.BoolVar(&dryrun, "dryrun", false, "dryrun for checking config")
 	flag.Parse()
 
-	if configDir == "" {
+	if configDir == "" || port == 0 {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -31,10 +31,9 @@ func parseCmdLine() {
 func main() {
 	parseCmdLine()
 
-	config.Load(configDir)
+	server.LoadModule(configDir)
 
 	if !dryrun {
-		server := httpserv.NewServer()
-		server.Start()
+	    server.NewServer(port).Start()
 	}
 }

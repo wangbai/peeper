@@ -1,4 +1,4 @@
-package httpserv
+package server
 
 import (
 	"fmt"
@@ -7,21 +7,23 @@ import (
 )
 
 type server struct {
-	Port uint32
+	port int
 }
 
 var s *server
 
-func NewServer() *server {
+func NewServer(p int) *server {
 	if s == nil {
-		s = &server{}
+		s = &server{
+            port: p, 
+        }
 	}
 
 	return s
 }
 
 func (s *server) Start() {
-	addr := fmt.Sprintf(":%d", s.Port)
+	addr := fmt.Sprintf(":%d", s.port)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", serve)
@@ -33,6 +35,6 @@ func serve(resp http.ResponseWriter, req *http.Request) {
 	commStr := strings.Split(req.RequestURI, "?")[0]
 	commStr = strings.TrimLeft(commStr, "/")
 
-	comm := matchCommand(commStr)
-	comm.Handle(resp, req)
+	comm := matchHandler(commStr)
+	comm.ServeHTTP(resp, req)
 }
