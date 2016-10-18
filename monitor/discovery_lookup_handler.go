@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/wangbai/peeper/httpserv"
+	"github.com/wangbai/peeper/server"
 )
 
 // json decode helper for Node
@@ -29,10 +29,10 @@ func registerDiscoveryLookupHandler(d *Discovery) {
 	}
 
 	dh := &discoveryLookupHandler{dis: d}
-	httpserv.Register("discovery", dh)
+	server.RegisterHandler("discovery", dh)
 }
 
-func (dh *discoveryLookupHandler) Handle(resp http.ResponseWriter, req *http.Request) {
+func (dh *discoveryLookupHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	// compose json data
 	jsonDis := make(map[string]serviceOutput)
 	ss := dh.dis.GetAllServices()

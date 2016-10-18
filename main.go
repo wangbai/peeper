@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	"github.com/wangbai/peeper/server"
+	_ "github.com/wangbai/peeper/monitor"
 )
 
 func init() {

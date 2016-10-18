@@ -7,7 +7,7 @@ import (
 
 var handlers map[string]http.Handler = make(map[string]http.Handler)
 
-func Register(name string, h http.Handler) {
+func RegisterHandler(name string, h http.Handler) {
 	if h == nil {
 		log.Fatal("Service:", name, " has nil handler")
 	}

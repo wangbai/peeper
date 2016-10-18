@@ -6,11 +6,11 @@ import (
 	"log"
 	"time"
 
-	"github.com/wangbai/peeper/config"
+	"github.com/wangbai/peeper/server"
 )
 
 func init() {
-	config.Register("discovery", &DiscoveryConfig{})
+	server.RegisterModule("discovery", &DiscoveryConfig{})
 }
 
 type nodeConfig struct {
@@ -30,7 +30,7 @@ type DiscoveryConfig []serviceConfig
 
 const configFile = "discovery.conf"
 
-func (dc *DiscoveryConfig) ParseAndBuild(dir string) {
+func (dc *DiscoveryConfig) ParseAndLoad(dir string) {
 	filePath := dir + "/" + configFile
 
 	file, err := ioutil.ReadFile(filePath)
@@ -64,5 +64,5 @@ func (dc *DiscoveryConfig) ParseAndBuild(dir string) {
 	dis.Start()
 	registerDiscoveryLookupHandler(dis)
 
-	log.Printf("discovery app has been started")
+	log.Printf("discovery module has been started")
 }
