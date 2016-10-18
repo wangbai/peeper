@@ -22,8 +22,8 @@ type Service struct {
 }
 
 type statusChan struct {
-    index       int
-    status      bool
+	index  int
+	status bool
 }
 
 func NewService(name string, nodes []Node, maxFailureNum uint32, interval time.Duration, timeout time.Duration) *Service {
@@ -54,8 +54,8 @@ func (s *Service) Start() {
 func (s *Service) updateNodeStatus() {
 	for {
 		st := <-s.nodeStatus
-        status := st.status
-        index := st.index        
+		status := st.status
+		index := st.index
 
 		node := s.Nodes[index]
 		if status {
@@ -82,9 +82,9 @@ func (s *Service) checkNodeStatus(index int, node Node) {
 			status = true
 		}
 
-		s.nodeStatus <- statusChan {
-			index: index,
-			status:  status,
+		s.nodeStatus <- statusChan{
+			index:  index,
+			status: status,
 		}
 
 		time.Sleep(s.Interval)

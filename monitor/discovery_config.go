@@ -19,10 +19,10 @@ type nodeConfig struct {
 }
 
 type serviceConfig struct {
-	Name          string     `json:"name"`
-	MaxFailureNum uint32     `json:"max_failure_num"`
-	Interval      uint32     `json:"interval"`
-	Timeout       uint32     `json:"timeout"`
+	Name          string       `json:"name"`
+	MaxFailureNum uint32       `json:"max_failure_num"`
+	Interval      uint32       `json:"interval"`
+	Timeout       uint32       `json:"timeout"`
 	Nodes         []nodeConfig `json:"nodes"`
 }
 

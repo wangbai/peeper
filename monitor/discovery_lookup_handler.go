@@ -39,7 +39,7 @@ func (dh *discoveryLookupHandler) ServeHTTP(resp http.ResponseWriter, req *http.
 	for _, s := range ss {
 		var jsonServ []nodeOutput
 		for _, n := range s.Nodes {
-			jsonServ = append(jsonServ, nodeOutput {
+			jsonServ = append(jsonServ, nodeOutput{
 				Address: n.Address,
 				Status:  n.Status,
 				Attr:    n.Attr,
@@ -51,12 +51,12 @@ func (dh *discoveryLookupHandler) ServeHTTP(resp http.ResponseWriter, req *http.
 
 	j, err := json.Marshal(jsonDis)
 	if err != nil {
-        resp.WriteHeader(http.StatusNotFound)
+		resp.WriteHeader(http.StatusNotFound)
 		fmt.Fprintf(resp, "%s", err)
 	}
 
 	// set header
 	resp.Header().Set("Content-Type", "application/json")
-    resp.WriteHeader(http.StatusOK)
+	resp.WriteHeader(http.StatusOK)
 	fmt.Fprintf(resp, "%s", j)
 }

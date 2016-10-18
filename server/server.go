@@ -15,8 +15,8 @@ var s *server
 func NewServer(p int) *server {
 	if s == nil {
 		s = &server{
-            port: p, 
-        }
+			port: p,
+		}
 	}
 
 	return s
