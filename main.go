@@ -24,7 +24,7 @@ func parseCmdLine() {
 	flag.BoolVar(&dryrun, "dryrun", false, "dryrun for checking config, default: false")
 	flag.Parse()
 
-	if configDir == "" || port == 0 {
+	if configDir == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
