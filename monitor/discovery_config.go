@@ -35,7 +35,8 @@ func (dc *DiscoveryConfig) ParseAndLoad(dir string) {
 
 	file, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		log.Fatal("When read ", filePath, " : ", err)
+		log.Println("When read ", filePath, " : ", err)
+        return
 	}
 
 	err = json.Unmarshal(file, dc)
