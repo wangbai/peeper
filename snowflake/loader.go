@@ -9,16 +9,16 @@ import (
 )
 
 func init() {
-	server.RegisterModule("snowflake", &Loader{})
+	server.RegisterModule("snowflake", &loader{})
 }
 
-type Loader struct {
-	nodeId uint64 `json:"node_id"`
+type loader struct {
+	NodeId uint64 `json:"node_id"`
 }
 
 const configFile = "snowflake.conf"
 
-func (l *Loader) ParseAndLoad(dir string) {
+func (l *loader) ParseAndLoad(dir string) {
 	filePath := dir + "/" + configFile
 
 	file, err := ioutil.ReadFile(filePath)
@@ -32,7 +32,7 @@ func (l *Loader) ParseAndLoad(dir string) {
 		log.Fatal("When parse ", filePath, " : ", err)
 	}
 
-	nid := l.nodeId
+	nid := l.NodeId
 	w, err := NewIdWorker(nid)
 	if err != nil {
 		log.Fatal(err)

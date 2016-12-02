@@ -32,6 +32,8 @@ func NewIdWorker(nid uint64) (*IdWorker, error) {
 		return nil, fmt.Errorf("node id %d is not in the range between %d and %d", nid, 0, maxNodeId)
 	}
 
+    fmt.Printf("%b\n", nid);
+
 	return &IdWorker{
 		timestamp:  0,
 		nodeId:     nid,
